@@ -180,12 +180,20 @@ namespace Compression_Parallel
                     char[] characters = _codeTable[ch].ToCharArray();
                     if (_bufferSize4WriteByte * 8 == endIndex)
                     {
+                        //The BitArray is just full, no available space left.
+                        //convert it to Byte[], Clone one then add to the output collection.
                         bits.CopyTo(buffer4Write, 0);
                         _outputBytes.Add((byte[])buffer4Write.Clone());
                         endIndex = 0;
                     }
                     else if (characters.Length > _bufferSize4WriteByte * 8 - endIndex)
                     {
+                        //The BitArray is not full, but no space for this entire word.
+                        //place the left part of the word to the BitArray,
+                        //convert to Byte[] then add to the output collection.
+                        //reset the pointer of the BitArray,
+                        //place the right part of the word to the BitArray,
+                        //then continue to the next word.
                         int bits4CurrentBlock = _bufferSize4WriteByte * 8 - endIndex;
                         for (int i = 0; i < bits4CurrentBlock; i++)
                         {
@@ -202,6 +210,8 @@ namespace Compression_Parallel
                         }
                         continue;
                     }
+                    //convert each digit in the character to '1' or '0',
+                    //then add them to the BitArray.
                     foreach (char digit in characters)
                     {
                         bits[endIndex] = digit == '1' ? true : false;
@@ -209,6 +219,9 @@ namespace Compression_Parallel
                     }
                 }
             }
+            //no word else to process, convert the BitArray to byte[],
+            //then add to the output collection.
+            //There's redandunt space written to the file, won't exceed 128K.
             bits.CopyTo(buffer4Write, 0);
             _outputBytes.Add(buffer4Write);
             _outputBytes.CompleteAdding();
