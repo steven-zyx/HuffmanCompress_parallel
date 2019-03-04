@@ -9,8 +9,8 @@ namespace Expansion
 {
     class Expand
     {
-        const string sourceFile = @"C:\Users\Administrator\Desktop\128M_Compressed_Parallel.txt";
-        const string targetFile = @"C:\Users\Administrator\Desktop\128M_Expand.txt";
+        const string sourceFile = @"C:\Users\10788\Desktop\Data\1G_Compressed_Parallel.txt";
+        const string targetFile = @"C:\Users\10788\Desktop\Data\1G_Expand.txt";
         static byte[] _buffer4ReadTrie = new byte[1];
         static ulong _totalChar;
         static FileStream reader;
@@ -19,6 +19,7 @@ namespace Expansion
         static void Main(string[] args)
         {
             EmptyTarget();
+            Console.WriteLine($"Compressed file MD5:{Tools.GetDigest(sourceFile)}");
             Console.WriteLine("Now start.");
             using (reader = File.OpenRead(sourceFile))
             {

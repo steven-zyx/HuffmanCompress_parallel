@@ -21,8 +21,8 @@ namespace Compression_Parallel
             new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), 1024);    //128M memory cache
         static BlockingCollection<byte[]> _outputBytes = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), 1024);   //128M memory cache
         static ManualResetEventSlim _mres = new ManualResetEventSlim(false);
-        const string sourceFile = @"C:\Users\Administrator\Desktop\1G_Origin.txt";
-        const string targetFile = @"C:\Users\Administrator\Desktop\1G_Compressed_Parallel.txt";
+        const string sourceFile = @"C:\Users\10788\Desktop\Data\1G_Origin.txt";
+        const string targetFile = @"C:\Users\10788\Desktop\Data\1G_Compressed_Parallel.txt";
         static int[] _freqTalbe = new int[256];
         static string[] _codeTable = new string[256];
         static ulong _totalChar = 0;
@@ -49,9 +49,9 @@ namespace Compression_Parallel
                 Convert,
                 ConsumeAndOutput);
 
-            Console.WriteLine($"Elapsed: {watch.Elapsed}");
+            Console.WriteLine($"Complete. Elapsed: {watch.Elapsed}");
             Console.WriteLine($"Compressed file MD5:{Tools.GetDigest(targetFile)}");
-            Console.WriteLine("Complete. Press Any Key to exit.");
+            Console.WriteLine("Press Any Key to exit.");
             Console.ReadKey();
         }
 

@@ -13,8 +13,8 @@ namespace Compression
     {
         const int _bufferSize4ReadByte = 128 * 1024;
         const int _bufferSize4WriteByte = 128 * 1024;
-        const string sourceFile = @"C:\Users\Administrator\Desktop\1G_Origin.txt";
-        const string targetFile = @"C:\Users\Administrator\Desktop\1G_Compressed.txt";
+        const string sourceFile = @"C:\Users\10788\Desktop\Data\1G_Origin.txt";
+        const string targetFile = @"C:\Users\10788\Desktop\Data\1G_Compressed.txt";
         private static int[] _freqTable = new int[256];
         private static string[] _codeTable = new string[256];
         private static ulong _totalChar;
