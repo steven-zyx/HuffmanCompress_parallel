@@ -1,14 +1,13 @@
 ﻿using Entity;
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Tool;
-using System.Diagnostics;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+using Tool;
 
 namespace Compression_Parallel
 {
@@ -17,8 +16,7 @@ namespace Compression_Parallel
         const int _bufferSize4Scan = 128 * 1024;
         const int _bufferSize4ReadByte = 128 * 1024;
         const int _bufferSize4WriteByte = 128 * 1024;
-        static BlockingCollection<byte[]> _inputBytes = 
-            new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), 1024);    //128M memory cache
+        static BlockingCollection<byte[]> _inputBytes = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), 1024);    //128M memory cache
         static BlockingCollection<byte[]> _outputBytes = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), 1024);   //128M memory cache
         static ManualResetEventSlim _mres = new ManualResetEventSlim(false);
         const string sourceFile = @"C:\Users\10788\Desktop\Data\1G_Origin.txt";

@@ -2,10 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Tool;
 using System.Diagnostics;
+using System.IO;
+using Tool;
 
 namespace Compression
 {
@@ -33,7 +32,7 @@ namespace Compression
             BuildCode(root, "");
             WriteTrie(root);
             WriteTotalChar();
-            WriteContent_Abandoned();
+            WriteContent();
 
             Console.WriteLine($"Elapsed: {watch.Elapsed}");
             Console.WriteLine("Complete. Press Any Key to exit.");
@@ -129,7 +128,7 @@ namespace Compression
             }
         }
 
-        static void WriteContent_Abandoned()
+        static void WriteContent()
         {
             using (FileStream reader = File.OpenRead(sourceFile))
             using (FileStream writer = new FileStream(targetFile, FileMode.Append))
@@ -184,72 +183,6 @@ namespace Compression
                 }
             }
         }
-
-        static void WriteContent()
-        {
-            using (FileStream reader = File.OpenRead(sourceFile))
-            using (FileStream writer = new FileStream(targetFile, FileMode.Append))
-            {
-                int readByte = 0;
-                BitArray buffer4WriteBit = new BitArray(_bufferSize4WriteByte * 8 * 8);
-                int endIndexOfBitArray = 0;
-                byte[] buffer4WriteByte = new byte[_bufferSize4WriteByte * 8];
-
-                while (true)
-                {
-                    readByte = reader.ReadByte();
-                    if (readByte == -1)
-                    {
-                        //flush the remaining data to the output, use a ceilling-align.
-                        buffer4WriteBit.CopyTo(buffer4WriteByte, 0);
-                        writer.Write(buffer4WriteByte, 0, endIndexOfBitArray / 8 + 1);
-                        return;
-                    }
-
-                    //interpret bits from character read, store to the bitArray
-                    char[] chars = _codeTable[(byte)readByte].ToCharArray();
-                    foreach (char item in chars)
-                    {
-                        buffer4WriteBit[endIndexOfBitArray] = item == '1' ? true : false;
-                        endIndexOfBitArray++;
-                    }
-
-                    //if the cache buffer size is beyond output buffer size, 
-                    //output the data using floor-align, 
-                    //store the reminder back to the cache buffer,
-                    //then adjust the end index of cache buffer.
-                    if (endIndexOfBitArray > _bufferSize4WriteByte * 8)
-                    {
-                        buffer4WriteBit.CopyTo(buffer4WriteByte, 0);
-                        writer.Write(buffer4WriteByte, 0, _bufferSize4WriteByte);
-
-                        int startIndex = 0;
-                        for (int i = _bufferSize4WriteByte * 8; i < endIndexOfBitArray; i++)
-                        {
-                            buffer4WriteBit[startIndex] = buffer4WriteBit[i];
-                            startIndex++;
-                        }
-                        endIndexOfBitArray = startIndex;
-                    }
-
-                }
-            }
-        }
-
-        #region Test method
-        static void TestFrequency()
-        {
-            byte[] total = File.ReadAllBytes(sourceFile);
-            int countA = total.AsParallel().Count(x => x == '\r');      //13    CR  Carrige Return
-            int countB = total.AsParallel().Count(x => x == 'a');       //97         
-            int countC = total.AsParallel().Count(x => x == '!');       //33    
-        }
-
-        static void ShowTrie()
-        {
-
-        }
-        #endregion
 
     }
 }
