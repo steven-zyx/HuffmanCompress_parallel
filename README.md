@@ -1,0 +1,2 @@
+# HuffmanCompress_parallel
+这个项目仅仅是我的毕业设计内容，根目录下的Data4Test.rar是测试文件，其中含有大小为1G到8M的4个文件。
